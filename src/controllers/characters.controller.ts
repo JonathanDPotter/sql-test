@@ -1,35 +1,65 @@
-import query from "../utils/query";
-
-interface charData {
-  name: string;
-  homePlanet: string | "Unknown";
-  age: number | "Unknown";
-  gender: "Male" | "Female";
-}
-
-const getCharacters = async (id: string | undefined) => {
-  return id
-    ? await query("SELECT * FROM characters WHERE ID=?", [id])
-    : await query("SELECT * FROM characters");
-};
-
-const addCharacter = async (data: charData) => {
-  return await query("INSERT INTO characters SET ?", [data]);
-};
-
-const updateCharacter = async (id: string, data: charData) => {
-  return await query("UPDATE characters SET ? WHERE ID=?", [data, id]);
-};
-
-const deleteCharacter = async (id: string) => {
-  return await query("DELETE FROM characters WHERE ID = ?", [id]);
-};
-
-const controller = {
+import { Request, Response, NextFunction } from "express";
+import {
   getCharacters,
   addCharacter,
   updateCharacter,
   deleteCharacter,
+} from "../services/characters.service";
+
+const getCharactersHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    res.status(200).json(await getCharacters(id));
+  } catch (error: any) {
+    next(error);
+  }
 };
 
-export default controller;
+const addCharacterHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.status(200).json(await addCharacter(req.body));
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+const updateCharacterHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    res.status(200).json(await updateCharacter(id, req.body));
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+const deleteCharacterHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    res.status(200).json(await deleteCharacter(id));
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export default {
+  getCharactersHandler,
+  addCharacterHandler,
+  updateCharacterHandler,
+  deleteCharacterHandler,
+};

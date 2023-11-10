@@ -3,42 +3,13 @@ import controller from "../controllers/characters.controller";
 
 const router = Router();
 
-router.get("/:id?", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    res.status(200).json(await controller.getCharacters(id));
-  } catch (error: any) {
-    next(error);
-  }
-});
+router.get("/:id?", controller.getCharactersHandler);
 
-router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.status(200).json(await controller.addCharacter(req.body));
-  } catch (error: any) {
-    next(error);
-  }
-});
+router.post("/", controller.addCharacterHandler);
 
-router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    res.status(200).json(await controller.updateCharacter(id, req.body));
-  } catch (error: any) {
-    next(error);
-  }
-});
+router.put("/:id", controller.updateCharacterHandler);
 
 router.delete(
-  "/:id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      res.status(200).json(await controller.deleteCharacter(id));
-    } catch (error: any) {
-      next(error);
-    }
-  }
-);
+  "/:id", controller.deleteCharacterHandler);
 
 export default router;
