@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import query from "../db/utils";
+import query from "../utils/query";
 
 const logger = (req: Request, _res: Response, next: NextFunction) => {
   const { method, url } = req;
